@@ -1,0 +1,345 @@
+.background{
+    width: 301px;
+    box-sizing: border-box !important;
+    position: relative; 
+}
+
+.tabsContainer{
+    padding: 5px;
+    display: block;
+    background-color: var(--black-strongest);
+    color: white;
+    border-radius: 5px;
+    border: 1px solid var(--gray-strong);
+    animation: slideDown .3s linear forwards;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%)
+}
+
+.slideUp{
+    animation: slideUp .3s linear forwards;
+}
+
+@keyframes slideDown {
+    from{
+        transform: translateY(-100%)
+    }
+    to{
+        transform: translateY(0)
+    }
+}
+
+@keyframes slideUp {
+    from{
+        transform: translateY(0)
+    }
+    to{
+        transform: translateY(-100%)
+    }
+}
+
+.itemContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background-color: var(--black-weakest);
+    border: 1px solid var(--gray-strong);
+    border-radius: 5px;
+    margin: 0px 3px;
+}
+
+.itemContainer:hover{
+    cursor: pointer;
+    background-color: var(--gray-strong) !important;
+}
+
+.activeItem{
+    background-color: var(--gray-strong) !important;
+}
+
+.itemImage{
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.donateItemInfo{
+    margin-top: 25px;
+    position: absolute;
+    top: 100%;
+    left: 20%;
+    width: 60%;
+    display: flex;
+    border: 1px solid var(--gray-strong);
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gray-weak);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    flex-flow: column;
+    animation: slideIn .3s ease-in-out forwards;
+}
+
+@keyframes slideIn {
+    to{
+        border: 1px solid var(--gray-strong);
+        background-color: var(--black-strongest);
+    }
+}
+
+.slideOut{
+    animation: slideOut .3s ease-in-out forwards;
+}
+
+@keyframes slideOut{
+    from{
+        /* border: 1px solid var(--gray-strong);
+        box-shadow: inset 0 200px 0 0 var(--black-strongest); */
+        opacity: 1;
+    }
+    to{
+        /* box-shadow: inset 0 0 0 0 var(--black-strongest); */
+        opacity: 0;
+    }
+}
+
+.topInfo{
+    width: 90%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white !important;
+}
+
+.imageInfo{
+    width: 30%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.textInfo{
+    display: flex;
+    flex-direction: column;
+}
+
+.nameInfo{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+.priceInfo{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.coinIcon{
+    font-size:20px !important;
+    color: var(--yellow) !important;
+    background-color: var(--light-purple);
+    border-radius: 50%;
+}
+
+.coinValue{
+    color: var(--orange) !important;
+    margin: 10px 10px 10px 0px;
+    font-weight: 700;
+}
+
+.botInfo{
+    width: 90%;
+    display: flex;
+    padding: 10px;
+    flex-flow:column;
+}
+
+.amountBoxContainer{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.amountBox{
+    width: 27%;
+    padding: 5px 0px;
+    border: 1px solid var(--gray-weak);
+    color: var(--gray-weak);
+    font-size: 12px; 
+    border-radius: 20px;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600 !important;
+}
+
+.amountBox:hover{
+    cursor: pointer;
+    border: 1px solid var(--light-purple);
+}
+
+.activeAmountBox{
+    color: white;
+    border: 1px solid var(--dark-purple);
+    background-color: var(--light-purple)
+}
+
+.handleDonateContainer{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0px 0px 0px;
+    border-top: 1px solid var(--gray-weak);
+    padding-top: 10px;
+}
+
+.inputContainer{
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    border: 1px solid var(--gray-weak);
+    background-color: var(--gray-strong);
+    padding: 6px 5px;
+    border-radius: 5px;
+}
+
+.input{
+    width: 80%;
+    outline: none;
+    border: none;
+    background-color: var(--gray-strong);
+    text-align: center;
+    color: white;
+    font-size: 12px; 
+    font-weight: 600;
+}
+
+.inputContainer:focus-within{
+    background-color: black !important;
+    border: 1px solid var(--dark-purple);
+}
+
+.input:focus{
+    background-color: black !important;
+}
+
+.buttonContainer{
+    background-color: transparent;
+    border:none;
+    border-radius: 5px;
+}
+
+.button{
+    background-color: var(--light-purple);
+    border: 1px solid var(--light-purple);
+    color: white;
+    font-size: 12px; 
+    font-weight: 600;
+    padding: 6px 6px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 0 var(--dark-purple);
+}
+
+.buttonContainer:hover > .button{
+    cursor: pointer;
+    animation: buttonAnimation ease-out .6s forwards;
+}
+
+.buttonContainer:hover{
+    background-color: var(--yellow);
+}
+
+.unActiveButton{
+    opacity: .8;
+    pointer-events: none;
+}
+
+.unActiveButton > .button{
+    background-color: var(--red);
+    border: 1px solid var(--red)
+}
+
+@keyframes buttonAnimation {
+    from{
+    }
+    to{
+        transform: translate(10%, -10%);
+        border: 1px solid #D80286;
+        box-shadow: inset 0 0 0 50px #D80286;
+    }
+}
+
+input::placeholder{
+    color: var(--gray-weak);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.indicatorBar{
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 50%;
+    height: 15px;
+    background-color: var(--black-strongest);  
+    color: white !important;  
+    display:flex;
+    justify-content: center;
+    align-items: center;  
+    border-bottom-left-radius: 6px; 
+    border-bottom-right-radius: 6px; 
+    border-top: 1px solid var(--gray-strong);   
+    z-index: 2;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    opacity: 0.8
+}
+
+.slideDownIndicator{
+    animation: slideDownIndicator linear .3s forwards;
+}
+
+.slideDownIndicator > .indicatorIcon{
+    transform: rotate(180deg)
+}
+
+.slideUpIndicator > .indicatorIcon{
+    transform: rotate(0deg)
+}
+
+.slideUpIndicator{
+    animation: slideUpIndicator linear .3s forwards !important;
+}
+
+@keyframes slideDownIndicator {
+    to{
+        top: 100%;
+        opacity: 1;
+    }
+}
+
+@keyframes slideUpIndicator {
+    from{
+        top: 100%
+    }
+    to{
+        top: 0;
+        opacity: .8;
+    }
+}
+
+.indicatorBar:hover{
+    cursor: pointer;
+}
+
+.indicatorIcon{
+    font-size: 15px;
+}

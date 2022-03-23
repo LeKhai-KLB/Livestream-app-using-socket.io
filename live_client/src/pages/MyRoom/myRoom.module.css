@@ -1,0 +1,665 @@
+.background{
+    width:100%;
+    height:100%;
+    background-color:transparent;
+    display:flex;
+    flex-flow: row;
+    box-sizing: border-box !important;
+    position: relative;
+}
+
+.handleContainer{
+    position:absolute;
+    background-color: transparent;
+    z-index: 9997;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay{
+    width: 100%;
+    height: 100%;
+    background-color: black !important;
+    opacity: 0.2;
+    z-index: 9998;
+}
+
+.loadContainer{
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white;
+}
+
+.loadIcon{
+    font-size: 30px !important;
+    padding: 8px;
+    background-color: transparent !important;
+    animation: loop 1s linear infinite;   
+}
+
+.loadTitle{
+    background-color: transparent !important;
+    font-size: 17px !important;
+    font-weight: 500 !important;
+}
+
+@keyframes loop {
+    to{
+        transform: rotate(360deg)
+    }
+}
+
+.margin_right{
+    margin-right: 10px;
+}
+
+.padding_right{
+    padding-right: 10px;
+}
+
+.margin_left{
+    margin-left: 10px;
+}
+
+.streamContainer{   
+    width: 75%;
+    height:100%;
+    background-color:transparent;
+    display:flex;
+    flex-flow: column;
+}
+
+.videoContainer{
+    width: 100%;
+    aspect-ratio: 16/9;
+    position:relative;
+}
+
+.donateBox{
+    position: absolute;
+    top: 0;
+    left: calc((100% - 301px) / 2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.donateNotiContainer{
+    z-index: 4;
+    width: 70%;
+    height: 50%;
+    top: 20%;
+    left: 15%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    justify-content: flex-start;
+    flex-flow: column;
+    position: relative;
+    animation: showNoti 1.5s linear, hideNoti 1.5s linear 5s forwards
+}
+
+@keyframes showNoti {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+@keyframes hideNoti {
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+
+.donateNotiText{
+    color: var(--dark-purple)
+}
+
+.donateNotiImage{
+    width: 15%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.wrapper_bg_bubbles {
+    background: transparent;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin-top: -200px;
+    overflow: hidden;
+}
+  
+.bg_bubbles {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 1;
+}
+.bg_bubbles li {
+position: absolute;
+list-style: none;
+display: block;
+width: 40px;
+height: 40px;
+background-color: var(--light-purple);
+opacity: .6;
+bottom: -160px;
+-webkit-animation: square 25s infinite;
+animation: square 25s infinite;
+-webkit-transition-timing-function: linear;
+transition-timing-function: linear;
+border-radius: 50%;
+}
+.bg_bubbles li:nth-child(1) {
+left: 10%;
+}
+.bg_bubbles li:nth-child(2) {
+left: 20%;
+width: 80px;
+height: 80px;
+-webkit-animation-delay: .3s;
+        animation-delay: .3s;
+-webkit-animation-duration: 10s;
+        animation-duration: 10s;
+}
+.bg_bubbles li:nth-child(3) {
+left: 25%;
+-webkit-animation-delay: 2s;
+        animation-delay: 2s;
+}
+.bg_bubbles li:nth-child(4) {
+left: 40%;
+width: 60px;
+height: 60px;
+-webkit-animation-duration: 15s;
+        animation-duration: 15s;
+background-color: white;
+opacity: .6;
+}
+.bg_bubbles li:nth-child(5) {
+left: 70%;
+}
+.bg_bubbles li:nth-child(6) {
+left: 80%;
+width: 120px;
+height: 120px;
+-webkit-animation-delay: 1s;
+        animation-delay: 1s;
+background-color: white;
+opacity: .6;
+}
+.bg_bubbles li:nth-child(7) {
+left: 32%;
+width: 160px;
+height: 160px;
+-webkit-animation-delay: 4s;
+        animation-delay: 4s;
+}
+.bg_bubbles li:nth-child(8) {
+left: 55%;
+width: 20px;
+height: 20px;
+-webkit-animation-delay: 8s;
+        animation-delay: 8s;
+-webkit-animation-duration: 33s;
+        animation-duration: 33s;
+}
+.bg_bubbles li:nth-child(9) {
+left: 25%;
+width: 10px;
+height: 10px;
+-webkit-animation-delay: 2s;
+        animation-delay: 2s;
+-webkit-animation-duration: 33s;
+        animation-duration: 33s;
+background-color: white;
+opacity: .6;
+}
+.bg_bubbles li:nth-child(10) {
+left: 90%;
+width: 160px;
+height: 160px;
+-webkit-animation-delay: 7s;
+        animation-delay: 7s;
+}
+@-webkit-keyframes square {
+0% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+}
+100% {
+    -webkit-transform: translateY(-700px) rotate(600deg);
+            transform: translateY(-700px) rotate(600deg);
+}
+}
+@keyframes square {
+0% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+}
+100% {
+    -webkit-transform: translateY(-700px) rotate(600deg);
+            transform: translateY(-700px) rotate(600deg);
+}
+}
+
+.videoScreen{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:black;
+    z-index: 1;
+    transform: scaleX(-1);
+}
+
+.show{
+    display:flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.hide{
+    display: none;
+}
+
+.videoContainer:hover > .mediaControlsContainer{
+    display:flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-flow: column !important;
+    animation: fadeIn .4s ease-in-out forwards;
+}
+
+.mediaControlsContainer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display:none;
+    background-color: transparent;
+    box-shadow: 0px 0px 40px 40px rgba(0 ,0 ,0 , 0.5) inset;
+    z-index: 2;
+    animation: fadeOut .4s ease-in-out;
+}
+
+.ctaReload{
+    color: var(--gray-weak);
+    text-align: center;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut{
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+
+.topControlsContainer{
+    width: calc(100% - 20px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 10px 0px 10px
+}
+
+.botControlsContainer{
+    width: 100%;
+    position: absolute;
+    bottom:0;
+    left: 0;
+    display: block;
+    z-index: 2;
+}
+
+.hoverLay{
+    width: (calc 100% - 35px);
+    padding: 10px 15px 10px 15px;
+    cursor: pointer;
+}
+
+.timeLine{
+    width: 100%;
+    height: 3px;
+    background-color: var(--weakest-purple);
+    border-radius: 10px;
+    position:relative;
+    overflow: none;
+}
+
+.timeStamp{
+    color: white;
+    position: absolute;
+    top:-30px;
+    margin:0px;
+    padding:0px;
+    right: 0px;
+    display:none
+}
+
+.timeRoller{
+    position: absolute;
+    width: 5px;
+    height: 2px;
+    border-radius: 10px;
+    background-color: white;
+    top: 0;
+    right:0;
+}
+
+.hoverLay:hover > .timeLine > .timeRoller{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    top:-5.5px
+}
+
+.hoverLay:hover > .timeLine{
+    height: 5px;
+}
+
+.hoverLay:hover > .timeLine > .timeStamp{
+    display:block;
+}
+
+
+.smallButtonContainer{
+    width: calc(100% -20px);
+    padding: 0px 10px 10px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.halfContainerLeft{
+    display: flex;
+    width: 50%;
+    justify-content:flex-start;
+    align-items: center;
+}
+
+.halfContainerRight{
+    display: flex;
+    width: 50%;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.liveState{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px !important;
+    color: white;
+    padding: 5px 15px;
+    background-color: var(--red);
+    margin-right: 10px;
+    font-weight: bold;
+    border-radius: 5px
+}
+
+.mediaButton_small{
+    color: white;
+    font-size: 27px !important;
+}
+
+.mediaButton_small:hover{
+    cursor: pointer;
+    background-color: rgba(255,255,255, 0.3);
+    border-radius: 6px;
+}
+
+.volumnBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.volumnSlider{
+    width: 50px !important;
+    padding: 5px 0px!important;
+    color: white !important;
+    display: none !important;
+}
+
+.volumnBox:hover > .volumnSlider{
+    display: block !important;
+}
+
+.mediaButton_big{
+    color: white !important;
+    font-size: 120px !important;
+
+}
+
+.mediaButton_big:hover{
+    cursor: pointer;
+    background-color: rgba(255,255,255, 0.3);
+    border-radius: 10px;
+}
+
+.infoContainer{
+    width: 100%;
+    padding-top: 15px;
+    display: flex;
+    float: left;
+}
+
+.avatarContainer{
+    width: 10%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.avatar{
+    width: 60%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: 3px solid var(--light-purple);
+    background-color: transparent;
+    padding: 3px;
+    margin-left: 15px;
+}
+
+.liveBox{
+    position: absolute;
+    background-color: var(--red);
+    color: white;
+    font-size:15px;
+    width:60%;
+    text-align:center;
+    border-radius: 3px;
+    border: 2px solid var(--back-color-light);
+    left: calc(12.5% + 6px);
+    top: 75%;
+    font-weight: bold
+}
+
+.offBox{
+    position: absolute;
+    background-color: var(--gray-strong);
+    color: white;
+    font-size:15px;
+    width:60%;
+    text-align:center;
+    border-radius: 3px;
+    border: 2px solid var(--back-color-light);
+    left: calc(12.5% + 6px);
+    top: 75%;
+    font-weight: bold
+}
+
+.textContainer{
+    width: 75%;
+    display:flex;
+    flex-flow: column;
+    margin-left: 20px;
+    overflow: hidden;
+}
+
+.infoName{
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark-purple);
+}
+
+.infoDesc{
+    font-size: 15px !important;
+    color: var(--color-font-light) !important;
+    font-weight: 500;
+    margin: 3px 0px 0px 0px !important;
+    padding: 0px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tagContainer{
+    display: flex;
+    margin-top:7px;
+}
+
+.tag{
+    padding: 0px 10px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-right: 10px;
+    border: 1px solid var(--dark-purple);
+    background-color: var(--light-purple);
+    color: white
+}
+
+.threeDotContainer{
+    margin-right: 15px;
+    width: calc(15% - 15px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.viewsContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px
+}
+
+.viewsNumber{
+    font-size: 16px;
+    color: white;
+    font-weight: 600;
+    margin-right: 5px
+}
+
+.viewsIcon{
+    margin-top: 2px;
+    color: white;
+    font-size: 18px;
+}
+
+.hoverThreeDot{
+    padding: 10px 0px 10px 10px;
+    position: relative;
+}
+
+.hoverThreeDot:hover > .outRoomContainer{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.threeDotIcon{
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.outRoomContainer{
+    position: absolute;
+    top: -15%;
+    right: 100%;
+    padding: 10px 0px;
+    display:none;
+}
+
+.outRoomBlock{
+    background-color:white;
+    width: 100px;
+    height: 30px;
+    padding: 4px 0px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-font-light);
+    z-index: inherit;
+}
+
+.outRoomIcon{
+    font-size: 18px !important;
+    margin-right: 10px;
+}
+
+.outRoomBlock:hover{
+    background-color: var(--gray-strong);
+    color:white;
+    cursor: pointer;
+}
+
+.showLinear{
+    animation: none !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-flow: column;
+}
+
+
+.chatContainer{ 
+    width: 25%;
+    height: 100%;
+    background-color:white;
+}
+
+

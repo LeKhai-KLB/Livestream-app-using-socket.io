@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+html, body, #root{
+  width: 100%;
+  height: 100%;
+  --pink: #D80286;
+  --yellow: #FFC600;
+  --blue:#335691;
+  --red: #e94f69;
+  --back-color-light: #F9F9F9;
+  --color-border-light: #e8ebed;
+  --color-note-dark:rgb(161, 149, 149);
+  --orange: #CE4817;
+  --color-tab-hover:#1a1a1a;
+  --backColor-tab-hover: #F5F5F5;
+  --color-tab-active: #1a1a1a;
+  --backColor-tab-active:  #E8EBED;
+  --dark-purple: #691C81;
+  --light-purple: #9147FF;
+  --weakest-purple: #A970FF;
+  --color-font-light: #4C4C4C;
+  --color-font-dark: #fff;
+  --black-strongest: #0E0E10;
+  --black-medium: #19161C;
+  --black-weakest: #18181B;
+  --gray-strong: #312F33;
+  --gray-weak: #6f7375;
+  --gray-weakest: #EAEAEB;
+  --gray-medium: #696769;
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif
+}

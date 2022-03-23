@@ -1,0 +1,345 @@
+.background{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box!important;
+    padding: 10px 15px 0px 15px;
+    display: flex;
+    flex-flow: column;
+    border: 1px solid var(--color-border-light);
+    z-index: 1;
+}
+
+.header{
+    width: 100%;    
+    display:flex;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--gray-weakest) !important;
+}
+
+.leftHeaderContainer{
+    width: 50%;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px;
+    position: relative;
+    z-index: 2;
+}
+
+.leftHeaderContainer:hover > .donatesData{
+    display: flex !important;
+}
+
+.leftHeaderContainer:hover .donatesDataPaddingTop{
+    display: flex !important;
+}
+
+.donatesDataPaddingTop{
+    content: '';
+    background-color: transparent !important;
+    width: 120px;
+    padding: 20px 0px !important;
+    position: absolute;
+    top: 30px;
+    left: 5px;
+    display:none;
+    z-index: inherit;
+}
+
+.donatesData{
+    position: absolute;
+    top:127%;
+    left: 3px;
+    width: 280px;
+    height: 110px;
+    padding: 10px 15px;
+    background-color: var(--light-purple);
+    display:none;
+    flex-flow: column-reverse;
+    z-index: inherit;
+    border-radius: 5px;
+    justify-content: flex-start;
+    overflow-y: auto;
+    transition: 0.5s;
+    box-shadow: 0 0 1px var(--light-purple),
+                0 0 4px var(--light-purple),
+                0 0 8px var(--light-purple),
+                0 0 12px var(--light-purple);
+    -webkit-box-reflect:below 5px linear-gradient(transparent, #0005);
+    animation: show .2s linear forwards;
+}
+
+@keyframes show {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+.donatesData::-webkit-scrollbar{
+    display: none
+} 
+
+.donateLine{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.donateText{
+    margin: 0px 10px !important;
+    padding: 0px !important;
+    flex:2;
+    color: var(--gray-weakest);
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.subAction{
+    margin-left: 5px;
+    color: var(--dark-purple);
+    font-weight: 600;
+    font-style: italic;
+    flex:2;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    display: inline-block;
+}
+
+.subItem{
+    color: var(--gray-weakest);
+    font-weight: 600;
+    font-style: italic;
+}
+
+.donateItemImage{
+    width: 9%    
+}
+
+.donateAvatar{
+    width: 10%;
+    border-radius: 50%;
+}
+
+.donateItemImage, .donateAvatar{
+    object-fit: cover;
+    object-position: center;
+}
+
+.donatesContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 0px 0px 7px;
+    border: 1px solid var(--light-purple);
+    background-color: var(--light-purple);
+    box-shadow: 0 0 1px var(--light-purple),
+                0 0 2px var(--light-purple),
+                0 0 3px var(--light-purple),
+                0 0 4px var(--light-purple);
+    border-radius: 5px;
+    color: white;
+}
+
+.donatesContainer{
+    cursor: pointer;
+}
+
+.donatesTitle{
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.headerTitle{
+    width: 50%;
+    padding: 5px !important;
+    margin: 0px !important;
+    color: var(--color-font-light) !important;
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.chatContainer{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    overflow:hidden;
+}
+
+.chatDisplay{
+    flex:1;
+    width: calc(100% - 20px + 4px);
+    height: calc(80% + 10px);
+    margin: 10px;
+    display: flex !important;
+    flex-direction: column-reverse;
+    overflow-y: auto;
+    justify-content: flex-start;
+    position: relative;
+    z-index: 0;
+}
+
+.scrollBottomIcon{
+    position: fixed;
+    bottom: 130px;
+    right: 140px;
+    z-index: 2;
+    color: var(--light-purple) !important;
+    background-color: white !important;
+    font-size: 35px !important;
+    border-radius: 50%;
+    opacity: .8;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2)
+}
+
+.scrollBottomIcon:hover{
+    opacity:1;
+    cursor: pointer !important;
+}
+
+.chatDisplay::-webkit-scrollbar{
+    display: none
+} 
+
+
+.chatLine{
+    width: 100%;
+}
+
+.chatContent{
+    margin: 10px 0px !important;
+    font-weight: 600;
+    width: 100%;
+    color: var(--color-font-light);
+    line-height: 23px;
+    position: relative;
+}
+
+.chatAvatar{
+    position: absolute;
+    top: 2.5px;
+    left: 0;
+    width: 13px;
+    height: 13px;
+    padding: 1px;
+    border: 2px solid var(--light-purple);
+    border-radius: 50%;
+    background-color: white;
+    object-fit: cover;
+    object-position: center;
+}
+
+.chatName{
+    margin: 0px 5px 0px 30px !important;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark-purple) !important;
+
+}
+
+.chatControls{
+    padding: 5px 10px;
+    display:flex;
+    flex-flow:column;
+    position:relative;
+}
+
+.pickerContainer{
+    position:absolute;
+    top: -325%;
+    left: 6%;
+    z-index: 3;
+}
+
+.inputContainer{
+    display: flex;
+    width: calc(100% - 20px);
+    padding: 10px 10px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--gray-weakest);
+    border-radius:  5px;
+    border: 2px solid var(--gray-weakest);
+    overflow: hidden;
+}
+
+.orangeName{
+    color: var(--orange) !important;
+}
+
+.orangeBorder{
+    border-color: var(--orange) !important;
+}
+
+.inputContainer:focus-within{
+    border: 2px solid var(--light-purple);
+}
+
+.input{
+    outline: none !important;
+    border: none !important;
+    font-size: 14px !important;
+    font-weight: 500;
+    width:89%;
+    background-color: var(--gray-weakest);
+    color: var(--color-font-light) !important;
+}
+
+.emojiIcon{
+    font-size: 18px !important;
+    color:black !important;
+}
+
+.emojiIcon:hover{
+    cursor: pointer;
+}
+
+.buttonsContainer{
+    display: flex;
+    width: calc(100% + 4px);
+    padding: 9px 0px;
+    margin-top: 1px;
+    align-items: center;
+    justify-content: space-between; 
+}
+
+.leftButtons{
+    margin-left: 10px;
+    width:70%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.commentIcon{
+    font-size: 22px;
+    color: black;
+}
+
+.commentIcon:hover{
+    cursor: pointer;
+}
+
+.rightButtons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 7px;
+    background-color: var(--light-purple);  
+}
+
+.rightButtons:hover{
+    cursor: pointer;
+}
+

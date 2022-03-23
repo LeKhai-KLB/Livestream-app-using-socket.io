@@ -1,0 +1,105 @@
+.container{
+    background-color: white;
+    box-shadow: 0 0 20px rgba(145, 71, 255, 1);
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    display:flex;
+    flex-wrap: wrap;
+    flex-flow: column;
+    overflow: hidden;
+}
+
+.thumbnailContainer{
+    width: 100%;
+    height: 63%;
+    position: relative;
+}
+
+.thumbnailImg{
+    width: 100%;
+    height: 100%;
+    display:block;
+    object-fit: cover;
+    object-position: center;
+    z-index: 100;
+}
+
+.stateBox{
+    position: absolute;
+    top: 5%;
+    left: 2.1825%;
+    background: var(--red);
+    text-align: center;
+    border-radius: 5px;
+}
+
+.stateText{
+    margin: 0px;
+    padding: 5px 10px;
+    font-size: 50%;
+    font-weight: bold;
+}
+
+.infoContainer{
+    flex-grow: 1;
+    margin-top:10px;
+    background-color: (--back-color-light);
+    display:flex;
+    flex-flow: row;
+}
+
+.leftInfo{
+    min-width: 25%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}  
+
+.avatar{
+    aspect-ratio: 1 / 1 !important;
+}
+
+.rightInfo{
+    width: 75%
+}
+
+.title{
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 70%;
+    color: var(--color-font-light);
+    font-weight: bold
+}
+
+.pTag{
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--color-font-light);
+    margin: 0px;
+    font-size: 60%;
+}
+
+.tagsContainer{
+    width: 90%;
+    overflow: hidden;
+    margin-top: 2px;
+    overflow: hidden;
+}
+
+.tagDiv{
+    padding: 3px;
+    font-size: 50%;
+    font-weight: bold;
+    background-color: var(--gray-weakest);
+    color: var(--color-font-light);
+    border-radius:5px;
+    display: inline-block;
+    margin-right: 3px;
+}
+
+

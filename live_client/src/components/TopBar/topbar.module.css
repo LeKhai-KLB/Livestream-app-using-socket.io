@@ -1,0 +1,194 @@
+.appBar{
+    z-index: 10000;
+    background-color: #fff !important;
+    color: var(--color-font-light) !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.appBarBlackTheme{
+    color: var(--color-font-dark) !important;
+    background-color: var(--black-medium) !important;
+    border-bottom: 1px solid var(--black-strongest);
+    animation: slideIn 800ms forwards;
+}
+
+@keyframes slideIn {
+    0%{
+        opacity: 0;
+    }
+    20%{
+        opacity: 0.1;
+    }
+    25%{
+        opacity: 0.2;
+    }
+    30%{
+        opacity: 0.3;
+    }
+    40%{
+        opacity: 0.5;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.toolbar{
+    display: flex;
+    color: inherit !important;
+    padding: 2px 18px !important;
+    z-index: inherit;
+}
+
+.logo{
+    width: 55px;
+    height: 57px;
+    margin-right: 10px;
+    background-color: inherit;
+}
+
+.flex_item{
+    flex: 1;
+    min-width: 350px;
+}
+
+.flex_left{
+    display: flex;
+    align-items: center;
+    color: inherit
+}
+
+.flex_center{
+    flex: 3;
+    text-align: center;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.watch_word{
+    padding: 0px 5px;
+    /* border-left: 1px solid rgb(211, 209, 209);
+    border-right: 1px solid rgb(211, 209, 209); */
+}
+
+.watch_word_m{
+    padding: 0px 5px;
+    color: var(--light-purple);
+}
+
+.watch_word, .watch_word_m{
+    cursor: pointer
+}
+
+.coinInfo{
+    display: inline-flex;
+    justify-content: space-around !important;
+    gap: 5px;
+    align-items: center;
+    background-color: inherit;
+    padding:0px 8px;
+    margin-left: 20px;
+    border-radius: 10px;
+}
+
+.coinInfo:hover{
+    cursor: pointer
+}
+
+.coinIcon{
+    font-size:20px !important;
+    color: var(--yellow) !important;
+    background-color: var(--light-purple);
+    border-radius: 50%;
+}
+
+.coinValue{
+    color: var(--orange) !important;
+    margin: 10px 0px;
+    padding-left: 3px;
+    font-weight: 700;
+}
+
+.userInfo{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    z-index: inherit;
+}
+
+.wrapper{
+    background-color: var(--light-purple);
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    border-radius: 23px;
+    padding: 4px 4px;
+    position:relative;
+    z-index: inherit;
+}
+
+.avatar{
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+}
+
+.userName{
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+    opacity: .9;
+    margin: 0px 0px 0px 15px !important;
+}
+
+.arrowDown{
+    color: white;
+    margin-left: 5px
+}
+
+.logOutContainer{
+    position: absolute;
+    top:100%;
+    width:100%;
+    left:0;
+    display:none;
+}
+
+.logOutblock{
+    background-color:white;
+    margin-top: 10px;
+    width: 100px;
+    height: 30px;
+    padding: 4px 0px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-font-light);
+    z-index: inherit;
+}
+
+.logOutblock:hover{
+    background-color: var(--gray-strong);
+    color:white
+}
+
+.logOutIcon{
+    font-size: 18px !important;
+    margin-left: 10px;
+}
+
+.wrapper:hover{
+    cursor: pointer
+}
+
+.wrapper:hover > .logOutContainer{
+    display: flex;
+    justify-content: center;
+    z-index: inherit;
+}

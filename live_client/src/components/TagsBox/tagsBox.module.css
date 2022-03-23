@@ -1,0 +1,95 @@
+
+.container{
+    border: 4px dashed var(--dark-purple);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+}
+
+.createTagbtn{
+    margin: 5px;
+    width: calc(100% / 4 - 5px);
+    height: 30px;
+    background-color: var(--dark-purple);
+    font-size: 12px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-radius:10px;
+    font-weight: bold;
+}
+
+.createTagbtn:hover{
+    cursor: pointer;
+    animation: zoomInOut .7s ease infinite;
+}
+
+.createTagbtn:hover > .addIcon{
+    animation: zoomInOut .7s ease infinite;
+}
+
+@keyframes zoomInOut {
+    0%{
+        transform: scale(1, 1);
+    }
+    50%{
+        transform: scale(1.1, 1.1);
+    }
+    100%{
+        transform: scale(1, 1)
+    }
+}
+
+.inactive{
+    pointer-events: none;
+    opacity: .7;
+}
+
+.tagContainer{
+    margin: 5px;
+    padding: 5px;
+    width: calc(100% / 4 - 13px);
+    height: 13px;
+    background-color: var(--orange);
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius:10px;
+    border: 3px solid var(--dark-purple);
+}
+
+.tagInput{
+    border:none;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+    background-color: transparent;
+    width: 65%
+}
+
+.cancelIcon{
+    font-size: 15px !important;
+    margin-left: 2px;
+}
+
+.addIcon{
+    color: white;
+    background-color: var(--dark-purple);
+    border-radius: 50%;
+    border-style:none;
+}
+
+
+
+.cancelIcon:hover{
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.tagInput:focus{
+    outline:none;
+    border: none;
+}
+

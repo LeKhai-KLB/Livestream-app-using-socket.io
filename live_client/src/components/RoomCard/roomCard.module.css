@@ -1,0 +1,150 @@
+.background{
+    width: 100%;
+    height: 100%;
+    background-color: white;
+}
+
+.background:hover{
+    cursor: pointer;
+
+}
+
+.thumbnailContainer{
+    aspect-ratio: 16/9;
+    position: relative;
+}
+
+.thumbnailImg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.stateBox{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--red);
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+.viewsBox{
+    border-radius: 5px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display:flex;
+    float:left;
+    align-items: center;
+    font-size: 14px !important;
+    color: #fff;
+    padding: 3px 5px;
+    background-color: rgba(0, 0, 0, 0.6)
+}
+
+.viewsNumber{
+    margin: 0px 8px 0px 2px;
+    font-weight: 500;
+}
+
+.viewsIcon{
+    font-size: 16px !important;
+}
+
+.infoContainer{
+    width: 100%;
+    margin-top:10px;
+    display:flex;
+    overflow: hidden;
+    float:left;
+}
+
+.avatar{
+    width:15%;
+    height:15%;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 50%;
+    margin-left: 10px;
+    margin-right: 10px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.textInfoContainer{
+    display: flex;
+    overflow: hidden;
+    flex-flow: column;
+    max-width: calc(85% - 45px);
+}
+
+.title{
+    max-width: 100%;
+    margin: 0px !important;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    font-size: 14px;
+    color: black;
+    font-weight: 600;
+}
+
+.name{
+    margin: 2px 0px;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--gray-weak) !important
+}
+
+.desc{
+    max-width: 100%;
+    margin: 0px;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--gray-weak) !important;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+.title:hover, .name:hover, .desc.hover{
+    color: var(--light-purple) !important
+}
+
+.tagsContainer{
+    margin: 7px 0px 9px 0px;
+    display: flex;
+    justify-content: flex-start;
+    overflow-x: scroll;
+    cursor: grabbing;
+}
+
+.tagsContainer::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+.tag{
+    text-align: center;
+    padding: 4px 7px;
+    margin-right: 5px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    background-color: var(--gray-weakest);
+    color: var(--color-font-light);
+    display:inline-block !important;
+    white-space: nowrap;
+}
+
+.tag:hover{
+    color: white;
+    background-color: var(--gray-weak);
+    cursor: pointer
+}
+

@@ -1,0 +1,90 @@
+.background{
+    min-width:130px;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    color: var(--color-font-light);
+    background-color: white;
+    border: 1px solid var(--color-border-light);
+}
+
+.backgroundNew{
+    min-width: 80px !important;
+    max-width:90px !important;
+    display:flex;
+    justify-content: center;
+    color: var(--color-font-light);
+    background-color: white;
+}
+
+.backgroundDarTheme{
+    background-color: var(--black-medium);
+    color: var(--color-font-dark);
+    animation: slideIn 800ms forwards;
+    border:none;
+}
+
+@keyframes slideIn {
+    0%{
+        opacity: 0;
+    }
+    20%{
+        opacity: 0.1;
+    }
+    25%{
+        opacity: 0.2;
+    }
+    30%{
+        opacity: 0.3;
+    }
+    40%{
+        opacity: 0.5;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.addWrapper{
+    min-width: 50px !important;
+    width: 75px !important;
+    height: 75px !important;
+    padding: 0px !important;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px !important;
+    border-radius: 50% !important;
+}
+
+.addIcon{
+    font-size: 48px !important;
+    color: var(--light-purple);
+}
+
+.addIcon:hover{
+    animation: zoomInOut .7s ease infinite;
+}
+
+@keyframes zoomInOut {
+    0%{
+        transform: scale(1, 1);
+    }
+    50%{
+        transform: scale(1.2, 1.2);
+    }
+    100%{
+        transform: scale(1, 1)
+    }
+}
+
+.invisible{
+    min-width: 0!important;
+    min-height: 0 !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0px !important;
+    margin: 0px !important;
+    pointer-events: none !important;
+}
+
