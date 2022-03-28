@@ -2,7 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import styles from './topbar.module.css';
 import { useSelector } from 'react-redux'
-import {userSelector} from '../../redux/selector'
+import {userSelector, userRoomSelector, roomSubscribedListSelector} from '../../redux/selector'
 import {darkThemeSelector} from '../../redux/selector'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
@@ -15,6 +15,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 function Topbar({logOut}){
 
     const curUser = useSelector(userSelector)
+    const roomSubscribedList = useSelector(roomSubscribedListSelector)
+    const userRoom = useSelector(userRoomSelector)
     const darkTheme = useSelector(darkThemeSelector)
     const appBar = useRef();
     console.log('top')
@@ -48,7 +50,7 @@ function Topbar({logOut}){
                             </div>
                             <div className = {styles.wrapper}>
                                 <div className = {styles.logOutContainer}>
-                                    <div onClick={() => logOut()} className = {styles.logOutblock}>
+                                    <div onClick={() => logOut(userRoom !== undefined, roomSubscribedList)} className = {styles.logOutblock}>
                                         Log out
                                         <LogoutIcon className = {styles.logOutIcon}/>
                                     </div>

@@ -21,8 +21,8 @@ export const darkThemeSelector = createSelector(darkThemeSelectorSelf, (state) =
 export const userSelector = createSelector(userSelectorSelf, (user) => {return user})
 
 // get room of user
-export const userRoomSelector = createSelector(roomSelectorSelf, (rooms) => {
-    return rooms.roomList.find(r => r.id === rooms.userRoom)
+export const userRoomSelector = createSelector(roomSelectorSelf,userSelectorSelf, (rooms, user) => {
+    return rooms.roomList.find(r => r.id === user.id)
 })
 
 //get current room id
@@ -72,5 +72,6 @@ export const donatesDataSelector = createSelector(roomSelectorSelf, messagesData
 //get currentDonate
 export const currentDonateSelector = createSelector(roomSelectorSelf, messagesDataSliceSelf, (rooms, messagesData) => {
     const mess =  messagesData.find(data => data.id === rooms.currentRoom)
-    return mess === undefined ? undefined:mess.currentDonate
+    console.log(mess)
+    return mess === undefined ? null:mess.currentDonate
 })

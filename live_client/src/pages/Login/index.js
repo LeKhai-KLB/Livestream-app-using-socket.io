@@ -17,6 +17,7 @@ import userSlice from "../../redux/Slice/userSlice"
 import messagesDataSlice from '../../redux/Slice/messagesDataSlice';
 import axios from 'axios';
 import { registerRoute } from '../../APIRoutes'
+import { io } from 'socket.io-client'
 
 const avars = Avatars()
 let loadingId;
@@ -33,7 +34,7 @@ const button = {
   }
 }
 
-function Login() {
+function Login({socket, host}) {
   const dispatch = useDispatch();
   const mainAvatar = useRef()
   const inp = useRef()
@@ -89,22 +90,24 @@ function Login() {
     }
     try{
       const { data } = await axios.post(registerRoute, {...user}) 
+      socket.current = io(host)
       if(data.status === false){
         toast.dismiss(loadingId)
         toast.error(data.msg)
         btn.current.disabled = false
       }
       else{
-      toast.dismiss(loadingId)
+        toast.dismiss(loadingId)
         toast.success('Ready to start...')
-        await dispatch(userSlice.actions.set_user(data.user))
-        await setTimeout(() => {
+        dispatch(userSlice.actions.set_user(data.user))
+        setTimeout(() => {
           his(`main/home`)
         }, 2000)
       }
     }
     catch(err){
       toast.dismiss(loadingId)
+      console.log('rrtrt')
       toast.error("Can't connect to server")
       btn.current.disabled = false
     }

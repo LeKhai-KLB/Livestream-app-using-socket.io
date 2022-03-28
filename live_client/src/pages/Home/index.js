@@ -1,17 +1,21 @@
-import { memo, useState, useCallback } from 'react'
+import { memo, useState, useCallback, useEffect } from 'react'
 import styles from './home.module.css'
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import RoomCard from '../../components/RoomCard';
 import { useSelector, useDispatch } from 'react-redux'
-import { tagsSelector, remainingRoomsSelector, userSelector } from '../../redux/selector'
+import { tagsSelector, remainingRoomsSelector, userSelector, curRoomIdSelector } from '../../redux/selector'
 import filterSlice from '../../redux/Slice/filterSlice'
 import roomsSlice from '../../redux/Slice/roomsSlice';
 import tabSlice from '../../redux/Slice/tabSlice'
 import { useNavigate } from 'react-router-dom'
 import LoopIcon from '@mui/icons-material/Loop';
+import { joinRoomRoute } from '../../APIRoutes'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios'
 
-function Home(){
+function Home({socket}){
 
     const dispatch = useDispatch();
     const nav = useNavigate();
@@ -23,6 +27,7 @@ function Home(){
     const tags = useSelector(tagsSelector)
     const rooms = useSelector(remainingRoomsSelector)
     const user = useSelector(userSelector)
+    const curRoomId = useSelector(curRoomIdSelector)
 
     const handleChangeSeachValue = (value) => {
         dispatch(filterSlice.actions.set_text(value))
@@ -45,12 +50,45 @@ function Home(){
 
     const handleClickRoom = useCallback(async(id) => {
         setShowLoad(true)
-        await dispatch(roomsSlice.actions.set_currentRoom(id))
-        if(id !== user.id && id !== 'Unknow-id'){
-            await dispatch(roomsSlice.actions.add_roomSubscribedList(id))
+        try{
+            if(id !== user.id && id !== 'Unknow-id'){
+                const {coins, ...userData} = user
+                const { data } = await axios.post(joinRoomRoute, {roomId: id, userId: user.id})
+                if(data.msg === "You are already in this room"){
+                    console.log("You are already in this room")
+                    await dispatch(roomsSlice.actions.set_currentRoom(id))
+                    setTimeout(() => handleNavigate(id)
+                    , 2000)
+                }
+                else{
+                    if(data.status === false){
+                        console.log(data.msg)
+                        setShowLoad(false)
+                        toast.error(data.msg)
+                    }
+                    else{
+                        
+                        console.log("ssuccess")
+                        await dispatch(roomsSlice.actions.add_user_join_room({id: id, user: userData}))
+                        await dispatch(roomsSlice.actions.add_roomSubscribedList({id: id, user: userData}))
+                        await dispatch(roomsSlice.actions.set_currentRoom(id))
+                        setTimeout(() => handleNavigate(id)
+                        , 2000)
+                    }
+                }
+            }
+            else{
+                console.log("bang nhau")
+                await dispatch(roomsSlice.actions.set_currentRoom(id))
+                setTimeout(() => handleNavigate(id)
+                , 2000)
+            }
         }
-        setTimeout(() => handleNavigate(id)
-            , 2000)
+        catch(error){
+            setShowLoad(false)
+            toast.error("Can't connect to server")
+        } 
+        
     })
 
     const handleNavigate = async(id) => {
@@ -65,6 +103,7 @@ function Home(){
 
     return(
         <div className = {styles.background}>
+            <ToastContainer style = {{top: '90px'}}></ToastContainer>
             {
                 showLoad && (
                     <div className = {styles.handleContainer}>

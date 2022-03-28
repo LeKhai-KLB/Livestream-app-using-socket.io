@@ -7,11 +7,13 @@ import { useEffect, memo, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LoopIcon from '@mui/icons-material/Loop';
 import tabSlice from '../../redux/Slice/tabSlice'
+import tagsSlice from '../../redux/Slice/tagsSlice'
+import roomsSlice from '../../redux/Slice/roomsSlice'
 import {useDispatch, useSelector} from 'react-redux'
 import axios from 'axios'
-import { deleleUserRoute } from '../../APIRoutes'
-import 'react-toastify/dist/ReactToastify.css';
+import { deleleUserRoute, getAllRoomRoute, deleteRoomRoute, deleteMessagesRoute } from '../../APIRoutes'
 import { userSelector } from '../../redux/selector'
+import { io } from 'socket.io-client'
 
 const theme = createTheme({
   typography: {
@@ -31,22 +33,30 @@ const theme = createTheme({
   },
 });
 
-
-function Main(){
+function Main({socket, host}){
   const user = useSelector(userSelector)
   const nav = useNavigate()
   const dispatch = useDispatch();
   const [showLoad, setShowLoad] = useState(false)
 
-  const logOut = useCallback(async() => {
+  const logOut = useCallback(async(check, roomSubscribedList) => {
     setShowLoad(true)
+    
     try{
-      const body = {
-        id: user.id,
+      await axios.post(deleleUserRoute, {id: user.id})
+      let tags;
+      if(check){
+        const { data } = await axios.post(deleteRoomRoute, {id: user.id})
+        await axios.post(deleteMessagesRoute, {id: user.id})
+        tags = [...data.tags]
       }
-      const {data} = await axios.post(deleleUserRoute, {...body})
+      const followedRooms = roomSubscribedList.map(r => r.id)
+      if(socket.current !== undefined){
+        await socket.current.emit('log-out', {id: user.id, tags: tags, isHadRoom: check, followedRooms: followedRooms, user: user})
+      }
       setTimeout(() =>{
         nav('../')
+        socket.current = undefined
       }
       , 2000)
     }
@@ -60,24 +70,58 @@ function Main(){
   }, [])
 
   const handleNavigate = async() => {
-    await nav('../')
+    try{
+      const {data} = await axios.post(deleleUserRoute, {id: user.id})
+      let tags;
+      if(true){
+        const { data } = await axios.post(deleteRoomRoute, {id: user.id})
+        await axios.post(deleteMessagesRoute, {id: user.id})
+        tags = [...data.tags]
+      }
+      if(socket.current !== undefined){
+        await socket.current.emit('log-out', {id: user.id, tags: data.tags, isHadRoom: true})
+      }
+      setTimeout(() =>{
+        nav('../')
+        socket.current = undefined
+      }
+      , 2000)
+    }
+    catch(err){
+      setTimeout(() =>{
+        nav('../')
+      }
+      , 2000)
+    }
   }
 
-  useEffect(() => { 
+  useEffect(async() => { 
     window.addEventListener('popstate', handleNavigate)
+    window.addEventListener('load', handleLoad)
+    if(socket.current === undefined){
+      socket.current = io(host, {reconnection: false})
+    }
+    try{
+      const {data} = await axios.get(getAllRoomRoute)
+      if(data.roomList.length !== 0){
+        await dispatch(roomsSlice.actions.set_roomList(data.roomList))
+
+        const arrayOfTags = data.roomList.map(r => r.tags)
+        const tags = arrayOfTags.flat(Infinity)
+        await dispatch(tagsSlice.actions.add_tags(tags))
+      }
+    }
+    catch(error){
+    }
+    return () => {
+          window.removeEventListener('load', handleLoad)
+    }
   }, [])
 
   const handleLoad = () => {
     dispatch(tabSlice.actions.set_tab('home'))
     nav('home')
   }
-
-  useEffect(() => {
-      window.addEventListener('load', handleLoad)
-      return () => {
-          window.removeEventListener('load', handleLoad)
-      }
-  }, [])
 
   return (
     <ThemeProvider theme={theme}>
@@ -95,7 +139,8 @@ function Main(){
         }
         <TopBar logOut = {logOut}/>
         <div className = {styles.container}>
-          <SideBar></SideBar>
+          
+          <SideBar socket = {socket}></SideBar>
           <Outlet/>
         </div>
       </div>

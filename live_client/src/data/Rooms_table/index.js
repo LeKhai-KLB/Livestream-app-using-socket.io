@@ -12,7 +12,9 @@ const Rooms_table = [
         description: 'On est là !',
         tags: ['Lol', 'LCK'],
         thumbnail: imgs[0],
-        views: 1200
+        views: 1200,
+        blackList:[],
+        userList: []
     },
     {
         id: 'Unknow-id-2',
@@ -22,7 +24,9 @@ const Rooms_table = [
         description: 'everyone else is 🗑',
         tags: ['Lol', 'Rank'],
         thumbnail: imgs[1],
-        views: 400
+        views: 400,
+        blackList:[],
+        userList: []
     },
     {
         id: 'Unknow-id-3',
@@ -32,7 +36,9 @@ const Rooms_table = [
         description: "Hey, my name is Nick and I've been a Challenger mid main since season 3. I play most mid lane champions as well as some unusual picks like Quinn and Pyke",
         tags: ['Lol'],
         thumbnail: imgs[2],
-        views: 200
+        views: 200,
+        blackList:[],
+        userList: []
     },
     {
         id: 'Unknow-id-4',
@@ -42,7 +48,9 @@ const Rooms_table = [
         description: 'Professional CS:GO Player for Imperial Esports - Facebook: fallencs / Twitter: FalleNCS / Instagram: fallen / youtube.com/fallenINSIDER / Business: contatobr@fallen.gg',
         tags: ['CSgo'],
         thumbnail: imgs[3],
-        views: 300
+        views: 300,
+        blackList:[],
+        userList: []
     },
     {
         id: 'Unknow-id-5',
@@ -52,7 +60,9 @@ const Rooms_table = [
         description: 'sinatraa truyền trực tiếp CSGo và Chỉ trò chuyện.',
         tags: ['CSgo'],
         thumbnail: imgs[4],
-        views: 1700
+        views: 1700,
+        blackList:[],
+        userList: []
     },
     {
         id: 'Unknow-id-6',
@@ -62,7 +72,9 @@ const Rooms_table = [
         description: 'uccleague2 truyền trực tiếp Counter-Strike: Global Offensive.',
         tags: ['CSgo', 'League2'],
         thumbnail: imgs[5],
-        views: 2100
+        views: 2100,
+        blackList:[],
+        userList: []
     },
     {
         id: 'Unknow-id-7',
@@ -72,7 +84,9 @@ const Rooms_table = [
         description: 'Talk Show & Podcast',
         tags: ['Talk show'],
         thumbnail: imgs[6],
-        views: 150
+        views: 150,
+        blackList:[],
+        userList: []
     },
     {
         id: 'Unknow-id-8',
@@ -82,7 +96,9 @@ const Rooms_table = [
         description: 'So... There is no words',
         tags: ['Talk show'],
         thumbnail: imgs[7],
-        views: 210
+        views: 210,
+        blackList:[],
+        userList: []
     },
 ]
 

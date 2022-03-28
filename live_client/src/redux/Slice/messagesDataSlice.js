@@ -4,19 +4,29 @@ export default createSlice({
     name: "messagesData",
     initialState: [],
     reducers: {
+        set_room_messagesData:(state,action) => {
+            const res = state.find(mess => mess.id === action.payload.id);
+            if(res === undefined){
+                state.push({...action.payload, currentDonate:null})
+            }
+            else{
+                res.chatsData = [...action.payload.chatsData]
+                res.donatesData = [...action.payload.donatesData]
+            }
+        },
         add_chat(state, action){
             const res = state.find(mess => mess.id === action.payload.id)
             if(res === undefined){
                 const data = {
                     id: action.payload.id,
-                    chatsData: [{...action.payload.data}],
+                    chatsData: [{...action.payload.chatData}],
                     donatesData: [],
-                    currentDonate: undefined
+                    currentDonate: null
                 }
                 state.push(data)
             }
             else{
-                res.chatsData = [{...action.payload.data}, ...res.chatsData]
+                res.chatsData = [{...action.payload.chatData}, ...res.chatsData]
             }
         },
         add_donate(state, action){
@@ -25,15 +35,15 @@ export default createSlice({
                 const data = {
                     id: action.payload.id,
                     chatsData: [],
-                    donatesData: [{...action.payload.data}],
-                    currentDonate: {...action.payload.data}
+                    donatesData: [{...action.payload.donateData}],
+                    currentDonate: {...action.payload.donateData}
                 }
                 state.push(data)
 
             }
             else{
-                res.donatesData = [{...action.payload.data}, ...res.donatesData]
-                res.currentDonate = {...action.payload.data, isShow: false}
+                res.donatesData = [{...action.payload.donateData}, ...res.donatesData]
+                res.currentDonate = {...action.payload.donateData, isShow: false}
             }
         },
         set_isShowCurrentDonate: (state, action) => {

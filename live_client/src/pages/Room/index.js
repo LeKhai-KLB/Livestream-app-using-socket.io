@@ -1,7 +1,7 @@
 import styles from './room.module.css';
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { curRoomSelector, currentDonateSelector } from '../../redux/selector';
+import { curRoomSelector, currentDonateSelector, userSelector } from '../../redux/selector';
 import tabSlice from '../../redux/Slice/tabSlice'
 import messagesDataSlice from '../../redux/Slice/messagesDataSlice'
 import roomsSlice from '../../redux/Slice/roomsSlice';
@@ -22,9 +22,14 @@ import ChatBox from '../../components/ChatBox';
 import DonateBox from '../../components/DonateBox';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LoopIcon from '@mui/icons-material/Loop';
+import { toast } from 'react-toastify';
+import { getMessagesRoute, getRoomByIdRoute } from '../../APIRoutes'
+import axios from 'axios'
+import Peer from 'simple-peer'
 
-function Room(){
+function Room({socket}){
     const curRoom = useSelector(curRoomSelector);
+    const user = useSelector(userSelector);
     const dispatch = useDispatch();
     const nav = useNavigate();
     const currentDonate = useSelector(currentDonateSelector)
@@ -38,6 +43,7 @@ function Room(){
     const [showLoad, setShowLoad] = useState(false)
     const [showNoti, setShowNoti] = useState(false)
 
+    let peer = useRef()
     const video = useRef();
     const timeLine = useRef();
     
@@ -48,9 +54,14 @@ function Room(){
 
     const handleOut = async() => {
         setShowLoad(true)
+        try{
+            await socket.current.emit('leave-room', {id: curRoom.id, user: user, isOut: true})
+        }
+        catch{
+
+        }
         await dispatch(tabSlice.actions.set_tab('home'))
-        await dispatch(messagesDataSlice.actions.remove_messSageRoomData((curRoom.id)))
-        await dispatch(roomsSlice.actions.remove_room(curRoom.id))
+        await dispatch(roomsSlice.actions.remove_room({id: curRoom.id, user: user}))
         await dispatch(roomsSlice.actions.set_currentRoom(''))
         await setTimeout(() => nav('../home'), 1000)
     }
@@ -64,7 +75,7 @@ function Room(){
     }
 
     useEffect(() => {
-        if(currentDonate !== undefined){
+        if(currentDonate !== null){
             if(!currentDonate.isShow){
                 if(timerIdNoti !== undefined){
                     clearTimeout(timerIdNoti)
@@ -78,9 +89,45 @@ function Room(){
     }
     , [currentDonate])
 
-    const callAPI = () => {
-        
-        if(stream !== null){
+   
+
+    const getMessagesFromServer = async() => {
+        try{
+            const {data} = await axios.post(getMessagesRoute, {id: curRoom.id})
+            if(data.status === false){
+                throw data.msg
+            }
+            else{
+                dispatch(messagesDataSlice.actions.set_room_messagesData({
+                    id: data.messages.id, 
+                    chatsData: data.messages.chatsData,
+                    donatesData: data.messages.donatesData
+                }))
+            }
+        }
+        catch(error){
+            toast.error("Can't load mesages data")
+        }
+    }
+
+    const onCurrentRoomDestroy = () => {
+        dispatch(tabSlice.actions.set_tab('home'))    
+
+        dispatch(roomsSlice.actions.set_currentRoom(''))
+
+        setTimeout(() => nav('../home'), 1000)
+
+    }
+
+    const onUserSendDonate = async(data) => {
+        await dispatch(messagesDataSlice.actions.add_donate(
+            {id: data.id, donateData: data.donateData}
+        ))
+    }
+
+    useEffect(() =>{
+        if(stream !== null && video.current === null){
+            video.current.srcObject = stream
             video.current.srcObject.getVideoTracks()[0].addEventListener('ended', handleUserOffStream)
             setIsOnline(true)
             setIsPause(false)
@@ -90,10 +137,85 @@ function Room(){
                 timeLine.current.addEventListener('mouseout', handleRemoveTimerId)
             }
         }
+    }, [stream])
+
+    const onGetStreamfromRoomMaster = (data) => {
+        const {signalData, userId} = data;
+        if(user.id === userId){
+            peer.current = new Peer()
+            peer.current.on('signal', signal => {
+                if(socket.current !== undefined){
+                    socket.current.emit('client-accept-stream', {id:curRoom.id, signalData: signal, userId: userId})
+                }
+            })
+            peer.current.signal(signalData)
+            peer.current.on('stream', stream => {
+                console.log('dây nè', stream)
+                if(stream !== null){
+                    setStream(stream)
+                    video.current.srcObject = stream
+                    video.current.srcObject.getVideoTracks()[0].addEventListener('ended', handleUserOffStream)
+                    setIsOnline(true)
+                    setIsPause(false)
+                    setShowCam(true)
+                    if(timeLine.current !== undefined){
+                        timeLine.current.addEventListener('mouseover', handleChangeTimeStamp)
+                        timeLine.current.addEventListener('mouseout', handleRemoveTimerId)
+                    }
+                }
+            })
+        }
     }
 
-    useEffect(() => 
-        callAPI()
+    const onNewUserJoined = (data) => {
+        dispatch(roomsSlice.actions.add_user_join_room({id: curRoom.id, user: data}))
+    }
+    const onUserLeaveRoom = (data) =>{
+        dispatch(roomsSlice.actions.remove_user_after_leave({id:curRoom.id, user: data}))
+    }
+
+    const onUserBanned = async(data) => {
+        const {userData} = data
+        dispatch(roomsSlice.actions.ban_user({id: curRoom.id, userData: userData}))
+        if(userData.id === user.id){
+            await dispatch(tabSlice.actions.set_tab('home'))
+            await dispatch(roomsSlice.actions.remove_roomSubscribedList(curRoom.id))
+            await dispatch(roomsSlice.actions.set_currentRoom(''))
+            await setTimeout(() => nav('../home'), 1000)
+        }
+    }
+
+    useEffect(async() => {
+        try{
+            const {data} = await axios.post(getRoomByIdRoute, {id: curRoom.id})
+            dispatch(roomsSlice.actions.set_roomById(data.roomData))
+        }
+        catch{
+            
+        }
+        if(socket.current !== undefined){
+            const {coins, ...userData} = user
+            socket.current.emit('join-room', {id: curRoom.id, user: userData})
+            socket.current.on('new-user-joined', onNewUserJoined)
+            socket.current.on('user-leaved-room', onUserLeaveRoom)
+            socket.current.on('curent-room-destroy', onCurrentRoomDestroy)
+            socket.current.on('user-send-donate', onUserSendDonate)
+            socket.current.on('get-stream', onGetStreamfromRoomMaster)
+            socket.current.on('user-banned', onUserBanned)
+        }
+        getMessagesFromServer()
+        return () => {
+            if(socket.current !== undefined){
+                socket.current.emit('leave-room', {id: curRoom.id, user: user, isOut: false})
+                socket.current.off('curent-room-destroy', onCurrentRoomDestroy)
+                socket.current.off('user-send-donate', onUserSendDonate)
+                socket.current.off('get-stream', onGetStreamfromRoomMaster)
+                socket.current.off('new-user-joined', onNewUserJoined)
+                socket.current.off('user-leaved-room', onUserLeaveRoom)
+                socket.current.off('user-banned', onUserBanned)
+            }
+        }
+    }
     , [])
 
     const handleChangeTimeStamp = () => {
@@ -162,11 +284,9 @@ function Room(){
             }
             <div className = {styles.streamContainer}>
                 <div className = {styles.videoContainer}>
-                    {isOnline &&
-                        <div className = {styles.donateBox}>
-                            <DonateBox isAdmin = {false}/>
-                        </div>
-                    }
+                    <div className = {styles.donateBox}>
+                        <DonateBox isAdmin = {false} socket = {socket}/>
+                    </div>
                     {showNoti &&    
                         <div className = {styles.donateNotiContainer}>
                             <div className={styles.wrapper_bg_bubbles}>
@@ -287,11 +407,9 @@ function Room(){
                     </div>
                 </div>
             </div>
-            {isOnline &&
-                <div className = {styles.chatContainer}>
-                    <ChatBox isAdmin = {false} />
-                </div>
-            }
+            <div className = {styles.chatContainer}>
+                <ChatBox isAdmin = {false} socket = {socket}/>
+            </div>
         </div>
     )
 }

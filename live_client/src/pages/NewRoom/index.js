@@ -10,17 +10,25 @@ import { useDispatch, useSelector } from 'react-redux'
 import tabSlice from '../../redux/Slice/tabSlice';
 import roomsSlice from '../../redux/Slice/roomsSlice';
 import tagsSlice from '../../redux/Slice/tagsSlice'
+import messagesDataSlice from '../../redux/Slice/messagesDataSlice';
 import PreviewRoomCard from '../../components/PreviewRoomCard'
 import { userSelector } from '../../redux/selector.js'
 import ErrorIcon from '@mui/icons-material/Error';
 import LoopIcon from '@mui/icons-material/Loop';
+import axios from 'axios'
+import {ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import {createRoomRoute, createMessagesRoute} from '../../APIRoutes'
+import {ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage'
+import { storageImage } from '../../firebase'
 
-function NewRoom(){
+function NewRoom({socket}){
     const user = useSelector(userSelector)
     const nav = useNavigate();
     const dispatch = useDispatch();
     console.log('new_room')
-    const [thumbUpload, setThumbUpload] = useState();
+    const [thumbUpload, setThumbUpload] = useState()
+    const [fileImage, setFileImage] = useState()
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const [tags, setTags] = useState([])
@@ -39,7 +47,9 @@ function NewRoom(){
 
     const handleChangeThumb = (e) => {
         const file = e.target.files[0]
+        setFileImage(file)
         file.preview = URL.createObjectURL(file)
+        console.log(file.preview)
         setThumbUpload(file.preview)
     }
 
@@ -82,23 +92,78 @@ function NewRoom(){
 
     const handleCreateRoom = async() => {
         setShowLoad(true)
-        await setTimeout(async() => {
-            await dispatch(roomsSlice.actions.set_userRoom(user.id === '' ? 'Unknow-id' : user.id))
-            const roomData = {
-                id: user.id === '' ? 'Unknow-id' : user.id,
-                name: user.name === '' ? 'Unknow': user.name,
-                avatar: user.image === '' ? userPlaceholder : user.image,
-                title: title === '' ? 'This guy too lazy to leave some words...' : title,
-                description: desc === '' ? 'So... There is no words' : desc,
-                tags: tags.length === 0  ? ['No tag']:(tags.map(tag => tag.value)),
-                thumbnail: thumbUpload === undefined ? imgPlaceholder:thumbUpload,
-                views: 0
+        const preSendData = {
+            id: user.id === '' ? 'Unknow-id' : user.id,
+            name: user.name === '' ? 'Unknow': user.name,
+            avatar: user.image === '' ? userPlaceholder : user.image,
+            title: title === '' ? 'This guy too lazy to leave some words...' : title,
+            description: desc === '' ? 'So... There is no words' : desc,
+            tags: tags.length === 0  ? ['No tag']:(tags.map(tag => tag.value)),
+            thumbnail: thumbUpload === undefined ? imgPlaceholder:thumbUpload,
+            views: 0,
+            userList: [],
+            blackList: []
+        }
+        if(fileImage !== undefined){ 
+            const fileName = new Date().getTime() + fileImage.name;
+            const storageRef = ref(storageImage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, fileImage);
+    
+            uploadTask.on('state_change', (snapshot) => {
+                }, 
+                (error) => {
+                    setShowLoad(false)
+                    toast.error("Can't upload image to storage")
+                },
+                () => {
+                    try{
+                        getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
+                            const roomData = {...preSendData, thumbnail: downloadURL}
+                            handleUploadNewRoom(roomData)
+                        })
+                        
+                    }
+                    catch(error){
+                        setShowLoad(false)
+                        toast.error("Room creation failure")
+                    }
+                }
+            ) 
+        }
+        else{
+            handleUploadNewRoom(preSendData)
+        }
+    }
+
+    const handleUploadNewRoom = async(roomData) => {
+        try{
+            const {data} = await axios.post(createRoomRoute, {...roomData})
+            const res = await axios.post(createMessagesRoute, {id: roomData.id})
+            if(res.data.msg === "Can't find this room"){
+                throw "Can't find this room"
             }
-            await dispatch(tagsSlice.actions.add_tags(tags.length === 0  ? ['No tag']:(tags.map(tag => tag.value))))
-            await dispatch(roomsSlice.actions.add_roomList(roomData))
-            await dispatch(roomsSlice.actions.set_currentRoom(roomData.id))
-        }, 2000)
-        await setTimeout(() => handleNavigate(), 3000)
+            if(socket.current !== undefined){
+                await socket.current.emit('create-room', roomData)
+            }
+            if(data.status === true){
+                setShowLoad(false)
+                toast.success("successful room creation")
+                await dispatch(roomsSlice.actions.set_userRoom(user.id === '' ? 'Unknow-id' : user.id))
+                await dispatch(messagesDataSlice.actions.set_room_messagesData({id: user.id, chatsData: [], donatesData: []}))
+                await dispatch(tagsSlice.actions.add_tags(tags.length === 0  ? ['No tag']:(tags.map(tag => tag.value))))
+                await dispatch(roomsSlice.actions.add_roomList(roomData))
+                await dispatch(roomsSlice.actions.set_currentRoom(roomData.id))
+                await setTimeout(() => handleNavigate(), 1000)
+            }
+            else{
+                setShowLoad(false)
+                toast.error(data.msg)
+            }
+        }
+        catch(error){
+            setShowLoad(false)
+            toast.error("Room creation failure")
+        }
     }
 
     const handleOnClickCreateRoom = () => {
@@ -107,7 +172,7 @@ function NewRoom(){
 
     return (
         <div className = {styles.background}>
-
+            <ToastContainer theme = "dark"></ToastContainer>
             {
                 showWarning && (
                     <div className = {styles.handleContainer}>

@@ -11,7 +11,7 @@ import messagesDataSlice from '../../redux/Slice/messagesDataSlice'
 
 const DonateItems = getDonateItems()
 
-function DonateBox({isAdmin}){
+function DonateBox({isAdmin, socket}){
     const dispatch = useDispatch();
     const user = useSelector(userSelector)
     const currentRoomId = useSelector(curRoomIdSelector)
@@ -89,19 +89,29 @@ function DonateBox({isAdmin}){
     }
 
     const handleClickDonateButton = async() => {
-        await dispatch(userSlice.actions.update_coin(user.coins - (amount * itemSelected.price)))
         const data = {
             id: currentRoomId,
-            data: {
+            donateData: {
                 avatar: user.image,
                 name: user.name,
                 itemImage: itemSelected.image,
                 itemName: itemSelected.name,
-                amount: amount
+                amount: amount,
+                price: itemSelected.price
             }
         }
-        await dispatch(messagesDataSlice.actions.add_donate(data))
-        await handleOnClickShowTabs()
+        try{
+            if(socket.current !== undefined){
+                await socket.current.emit('send-donate', {id: data.id, donateData: data.donateData});
+            }
+            await dispatch(userSlice.actions.update_coin(user.coins - (amount * itemSelected.price)))
+            await dispatch(messagesDataSlice.actions.add_donate(data))
+            await handleOnClickShowTabs()
+        }
+        catch(err){
+            console.log("Can't not send donate")
+        }
+        
     }
     
     return (

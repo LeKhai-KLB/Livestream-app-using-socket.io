@@ -19,20 +19,24 @@ export default createSlice({
             });
         },
         remove_tags: (state, action) => {
-            let newState;
-            action.payload.forEach(element => {
-                const res = state.find(s => {
-                    return s.tag.toLowerCase() === element.toLowerCase();
+            if(action.payload !== undefined){
+                let newState;
+                action.payload.forEach(element => {
+                    const res = state.find(s => {
+                        return s.tag.toLowerCase() === element.toLowerCase();
+                    })
+                    if(res !== undefined) {
+                        if(res.count === 1){
+                            newState = state.filter(t => t.tag !== res.tag)
+                        }
+                        else{
+                            res.count -= 1;
+                            newState = state
+                        }
+                    }
                 })
-                if(res.count === 1){
-                    newState = state.filter(t => t.tag !== res.tag)
-                }
-                else{
-                    res.count -= 1;
-                    newState = state
-                }
-            })
-            return newState
+                return newState
+            }
         },
         reset_tags: (state, action) => {
             if(action.payload === true){

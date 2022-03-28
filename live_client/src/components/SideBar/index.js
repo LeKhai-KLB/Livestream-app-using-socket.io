@@ -10,8 +10,10 @@ import tabSlice from '../../redux/Slice/tabSlice'
 import roomsSlice from '../../redux/Slice/roomsSlice'
 import darkThemeSlice from '../../redux/Slice/darkThemeSlice';
 import { useNavigate } from 'react-router-dom'
+import messagesDataSlice from '../../redux/Slice/messagesDataSlice'
+import tagsSlice from '../../redux/Slice/tagsSlice'
 
-function SideBar(){
+function SideBar({socket}){
     const [tabsList, setTabList] = useState(['home', 'info', 'new_room'])
     const [showAddTab, setShowAddTab] = useState(true)
     let tabValue = useSelector(tabSelector)
@@ -52,6 +54,30 @@ function SideBar(){
         }
     })
 
+    const roomDestroy = async(data) => {
+        dispatch(messagesDataSlice.actions.remove_messSageRoomData(data.id))
+        dispatch(roomsSlice.actions.destroy_other_room(data.id));
+        dispatch(tagsSlice.actions.remove_tags(data.tags))
+    }
+
+    const onNewRoomCreated = (newRoom) => {
+        dispatch(roomsSlice.actions.add_roomList({...newRoom}))
+        dispatch(tagsSlice.actions.add_tags(newRoom.tags))
+    }
+
+    useEffect(() => {
+        if(socket.current !== undefined){
+            socket.current.on('room-destroy', roomDestroy)
+            socket.current.on('new-room-created', onNewRoomCreated)
+        }
+        return () => {
+            if(socket.current !== undefined){
+                socket.current.off('room-destroy', roomDestroy)
+                socket.current.off('new-room-created', onNewRoomCreated)
+            }
+        } 
+    }, [])
+
     useEffect(() =>{
         handleReRenderUserRoom()
     }
@@ -69,7 +95,8 @@ function SideBar(){
         }
         else{
             await setTabList(prev => {
-                return prev.filter(p => p != curRoomId)
+                const newTabList = prev.filter(p => p !== curRoomId)
+                return newTabList
             })
             await dispatch(roomsSlice.actions.set_currentRoom(''))
             setShowAddTab(true)
@@ -78,7 +105,28 @@ function SideBar(){
 
     const handleReRenderRoomSubscribedList = () => {
         const list = roomSubscribedList.map(r => r.id)
-        setTabList(prev => [...prev, ...list])
+        setTabList(prev => {
+            let newPrev = [...prev]
+            if(list.length === 0){
+                if(userRoom !== undefined){
+                    newPrev = ['home', 'info', 'new_room', userRoom.id]
+                }
+                else{
+                    newPrev = ['home', 'info', 'new_room']
+                }
+            }
+            else{
+                if(userRoom !== undefined){
+                    newPrev = ['home', 'info', 'new_room', userRoom.id]
+                }
+                else{
+                    newPrev = ['home', 'info', 'new_room']
+                }
+                newPrev = [...newPrev, ...list]
+            }
+            
+            return newPrev
+        })
     }
 
     useEffect(() => {

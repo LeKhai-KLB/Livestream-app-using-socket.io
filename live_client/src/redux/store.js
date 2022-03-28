@@ -30,7 +30,7 @@ const reducer = combineReducers({
     tab: tabSlice.reducer,
     tags: tagsSlice.reducer,
     filter: filterSlice.reducer,
-    messagesData: messagesDataSlice.reducer 
+    messagesData: messagesDataSlice.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)
