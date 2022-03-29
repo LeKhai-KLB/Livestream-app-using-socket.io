@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
 
     socket.on('set-stream', async(data) => {
         const {id , signalData, userId} = data
-        console.log('set-stream', id, userId)
+        console.log('set-stream')
         const room = await Room.findOne({id})
         if(room){
             socket.to(id).emit('get-stream', {signalData: signalData, userId: userId})
@@ -114,7 +114,7 @@ io.on('connection', (socket) => {
 
     socket.on('client-accept-stream', async(data) => {
         const {id, signalData, userId} = data
-        console.log('client-accept-stream', id, userId)
+        console.log('client-accept-stream')
         const room = await Room.findOne({id})
         if(room){
             socket.to(id).emit('successfully-connected-peer', {signalData: signalData, userId: userId})
@@ -134,6 +134,9 @@ io.on('connection', (socket) => {
         const { id, user, isOut } = data
 
         console.log('client leave room')
+
+        socket.leave(id);
+        socket.to(id).emit('destroy-peer', {userId: user.id})
         
         if(isOut){
             const room = await Room.findOne({ id: id })
@@ -142,9 +145,6 @@ io.on('connection', (socket) => {
             }
             socket.to(id).emit('user-leaved-room', user)
         }
-
-        socket.to(id).emit('destroy-peer', user.id)
-        socket.leave(id);
-
+        
     })
 })

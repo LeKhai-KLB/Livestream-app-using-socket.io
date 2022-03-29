@@ -19,7 +19,6 @@ function Topbar({logOut}){
     const userRoom = useSelector(userRoomSelector)
     const darkTheme = useSelector(darkThemeSelector)
     const appBar = useRef();
-    console.log('top')
 
     useEffect(() => {
         if(darkTheme === true){

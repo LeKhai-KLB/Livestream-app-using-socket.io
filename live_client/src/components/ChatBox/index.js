@@ -13,7 +13,7 @@ import messagesDataSlice from '../../redux/Slice/messagesDataSlice';
 import PersonIcon from '@mui/icons-material/Person';
 import FaceRetouchingOffIcon from '@mui/icons-material/FaceRetouchingOff';
 
-function ChatBox({isAdmin, socket}){
+function ChatBox({isAdmin, socket, onBanned}){
     const dispatch = useDispatch();
     const user = useSelector(userSelector)
     const currentRoomId = useSelector(curRoomIdSelector)
@@ -48,7 +48,6 @@ function ChatBox({isAdmin, socket}){
                 }    
             }
             catch{
-                console.log("Can't send message")
             }
         }
     }
@@ -56,8 +55,6 @@ function ChatBox({isAdmin, socket}){
     const emojiClick = (e, emojiObj) => {
         setChatText(prev => prev + emojiObj.emoji)
     }
-
-    console.log('chatBox')
 
     const onUserSendData = (data) => {
         dispatch(messagesDataSlice.actions.add_chat({
@@ -102,6 +99,7 @@ function ChatBox({isAdmin, socket}){
             socket.current.emit('ban-user', {id: currentRoomId, userData: user});
         }
         dispatch(roomsSlice.actions.ban_user({id: currentRoomId, userData: user}))
+        onBanned(user.id)
     }
 
     return (
@@ -148,7 +146,7 @@ function ChatBox({isAdmin, socket}){
                         )}
                     </div>
                     :<div className = {styles.userDisplay}>
-                            {(curRoom.userList !== undefined) && curRoom.userList.map((u, index) => 
+                            {curRoom && curRoom.userList.map((u, index) => 
                                 <div key = {index} className = {styles.userLine}>
                                     <div className = {styles.leftLine}>
                                         <img className = {styles.userImage} src = {u.image}></img>

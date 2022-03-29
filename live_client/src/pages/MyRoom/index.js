@@ -7,7 +7,7 @@ import tabSlice from '../../redux/Slice/tabSlice'
 import roomsSlice from '../../redux/Slice/roomsSlice';
 import tagsSlice from '../../redux/Slice/tagsSlice';
 import messagesDataSlice from '../../redux/Slice/messagesDataSlice'
-import {memo, useState, useRef, useEffect } from 'react'
+import {memo, useState, useRef, useEffect, useCallback } from 'react'
 import ReplayIcon from '@mui/icons-material/Replay';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -45,14 +45,12 @@ function MyRoom({socket}){
     const [isOnline, setIsOnline] = useState(false)
     const [showLoad, setShowLoad] = useState(false)
     const [showNoti, setShowNoti] = useState(false)
+    const [peers, setPeers] = useState([])
     const peerList = useRef([])
     const video = useRef();
     const timeLine = useRef();
-    let timerIdNoti = undefined;
-    
+    let timerIdNoti = undefined;    
     let timerId;
-
-    console.log('room')
 
     const handleOut = async() => {
         setShowLoad(true)
@@ -61,10 +59,10 @@ function MyRoom({socket}){
             await axios.post(deleteMessagesRoute, {id: curRoom.id})
             if(socket.current !== undefined){
                 socket.current.emit('destroy-room', {id: curRoom.id, tags:data.tags})
-                peerList.forEach(peer => {
-                    peer.destroy()
-                })
             }
+            peerList.current.forEach(peer => {
+                peer.peer.destroy()
+            })
             setShowLoad(false)
         }
         catch(error) {
@@ -75,7 +73,7 @@ function MyRoom({socket}){
         await dispatch(roomsSlice.actions.remove_room({id:curRoom.id, user: 'this'}))
         await dispatch(roomsSlice.actions.set_currentRoom(''))
         await dispatch(tagsSlice.actions.remove_tags(curRoom.tags))
-        await setTimeout(() => nav('../home'), 1000)
+        await nav('../home')
     }
 
     const showError = () => {
@@ -100,9 +98,9 @@ function MyRoom({socket}){
                 timeLine.current.addEventListener('mouseover', handleChangeTimeStamp)
                 timeLine.current.addEventListener('mouseout', handleRemoveTimerId)
             }
+            
         })
         .catch((err)=>{
-            console.log(err)
             if(stream !== null){
                 video.current.srcObject = null
                 setStream(null)
@@ -153,26 +151,35 @@ function MyRoom({socket}){
 
     const onUserJoinedRoom = (data) => {
         dispatch(roomsSlice.actions.add_user_join_room({id: curRoom.id, user: data}))
-        const peer = new Peer ({initiator: true, stream: stream})
+        const peer = new Peer ({initiator: true, trickle: false, stream: (stream === null ? video.current.srcObject:stream)})
+        let curSignal = null
         peer.on('signal', signal => {
-            if(socket.current !== undefined){
-                socket.current.emit('set-stream', {id: curRoom.id, signalData: signal, userId: data.id});
+            if(curSignal === null){
+                curSignal = signal;
+                if(socket.current !== undefined){
+                    socket.current.emit('set-stream', {id: curRoom.id, signalData: signal, userId: data.id});
+                }
             }
         })
         peerList.current.push({id: data.id, peer: peer})
+        setStream(video.current.srcObject)
     }
 
     const onsuccessfullyConnectedPeer = (data) => {
         const {signalData, userId} = data
-        const peer = peerList.current.find(p => p.id === userId)
-        console.log(peer)
-        peer.peer.signal(signalData)
+        if(peerList.current.findIndex(p => p.id === userId) !== -1){
+            const peer = peerList.current.find(p => p.id === userId)
+            peer.peer.signal(signalData)
+        }
     }
 
     const onDestroyPeer = (data) => {
-        const peer = peerList.current.find(p => p.id === data)
-        peer.peer.destroy()
-        peerList.current.filter(p => p.id !== data)
+        if(peerList.current.findIndex(p => p.id === data.userId) !== -1){
+            const peer = peerList.current.find(p => p.id === data.userId)
+            peer.peer.destroy()
+            const newPeerList = peerList.current.filter(p => p.id !== data.userId)
+            peerList.current = newPeerList
+        }
     }
 
     const onUserLeaveRoom = (data) =>{
@@ -196,7 +203,6 @@ function MyRoom({socket}){
             socket.current.on('destroy-peer', onDestroyPeer)
         }
         setMediaDevices()
-
         return () => {
             if(socket.current !== undefined){
                 socket.current.off('new-user-joined', onUserJoinedRoom)
@@ -256,8 +262,19 @@ function MyRoom({socket}){
 
     const handleChangeVolume = (value) => {
         setVolumeValue(value)
+        peerList.current.forEach(p => p.peer.removeStream(video.current.srcObject))
         video.current.volume = value / 100
+        peerList.current.forEach(p => p.peer.addStream(video.current.srcObject))
     }
+
+    const onBanned = useCallback((userId) => {
+        if(peerList.current.findIndex(p => p.id === userId) !== -1){
+            const peer = peerList.current.find(p => p.id === userId)
+            peer.peer.destroy()
+            const newPeerList = peerList.current.filter(p => p.id !== userId)
+            peerList.current = newPeerList
+        }
+    })
 
     return (
         <div className = {styles.background}>
@@ -399,7 +416,12 @@ function MyRoom({socket}){
             </div>
             <div className = {styles.chatContainer}>
                 {isOnline &&
-                    <ChatBox isAdmin = {true} socket = {socket} userList = {curRoom.userList}></ChatBox>
+                    <ChatBox 
+                        isAdmin = {true} 
+                        socket = {socket} 
+                        userList = {curRoom && curRoom.userList} 
+                        onBanned = {onBanned}
+                    ></ChatBox>
                 }
             </div>
         </div>

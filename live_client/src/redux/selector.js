@@ -72,6 +72,5 @@ export const donatesDataSelector = createSelector(roomSelectorSelf, messagesData
 //get currentDonate
 export const currentDonateSelector = createSelector(roomSelectorSelf, messagesDataSliceSelf, (rooms, messagesData) => {
     const mess =  messagesData.find(data => data.id === rooms.currentRoom)
-    console.log(mess)
     return mess === undefined ? null:mess.currentDonate
 })

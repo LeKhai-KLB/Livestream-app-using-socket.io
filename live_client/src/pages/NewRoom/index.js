@@ -26,7 +26,6 @@ function NewRoom({socket}){
     const user = useSelector(userSelector)
     const nav = useNavigate();
     const dispatch = useDispatch();
-    console.log('new_room')
     const [thumbUpload, setThumbUpload] = useState()
     const [fileImage, setFileImage] = useState()
     const [title, setTitle] = useState('')
@@ -49,7 +48,6 @@ function NewRoom({socket}){
         const file = e.target.files[0]
         setFileImage(file)
         file.preview = URL.createObjectURL(file)
-        console.log(file.preview)
         setThumbUpload(file.preview)
     }
 

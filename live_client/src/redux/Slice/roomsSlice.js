@@ -1,12 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit'
-import Rooms_table from '../../data/Rooms_table'
 
 export default createSlice({
     name: 'rooms',
     initialState: {
         userRoom: '',
         currentRoom: '',
-        roomList: Rooms_table,
+        roomList: [],
         roomSubscribedList: []
     }, 
     reducers:{
@@ -17,18 +16,15 @@ export default createSlice({
             state.currentRoom = action.payload;
         },
         set_roomList: (state, action) => {
-            if(state.roomList.length === 8){
-                state.roomList = [...state.roomList, ...action.payload];
+            if(state.roomList.length < action.payload.length){
+                for(let i = state.roomList.length; i < action.payload.length; i++){
+                    state.roomList.push(action.payload[i]);
+                }
             }
-            // if(state.roomList.length < action.payload.length){
-            //     for(let i = state.roomList.length; i < action.payload.length; i++){
-            //         state.roomList.push(action.payload[i]);
-            //     }
-            // }
         },
         set_roomById: (state, action) => {
             const id = action.payload.id
-            const room = state.roomList.find(r => r.id === id)
+            let room = state.roomList.find(r => r.id === id)
             if(room){
                 room = {...action.payload}
             }
@@ -61,7 +57,6 @@ export default createSlice({
             if(res !== -1){
                 const newRes = state.roomSubscribedList.findIndex(id => id === action.payload)
                 if(newRes !== -1){
-                    console.log(newRes)
                     const newRoomSubscribedList = state.roomSubscribedList.filter(id => id !== action.payload)
                     state.roomSubscribedList = newRoomSubscribedList
                 }
@@ -104,7 +99,6 @@ export default createSlice({
             const { id, user } = action.payload;
             const room = state.roomList.find(r => r.id === id)
             if(room !== undefined){
-                console.log('found room')
                 if(room.userList.findIndex(u => u.id === user.id) !== -1){
                     const newRoom = room.userList.filter(u => u.id !== user.id)
                     room.userList = newRoom
@@ -117,7 +111,7 @@ export default createSlice({
                 return {
                     userRoom: '',
                     currentRoom: '',
-                    roomList: Rooms_table,
+                    roomList: [],
                     roomSubscribedList: []
                 }
             }

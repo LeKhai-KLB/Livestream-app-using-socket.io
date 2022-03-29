@@ -50,8 +50,6 @@ function Room({socket}){
     let timerId;
     let timerIdNoti = undefined;
 
-    console.log('room')
-
     const handleOut = async() => {
         setShowLoad(true)
         try{
@@ -60,10 +58,13 @@ function Room({socket}){
         catch{
 
         }
+        if(peer.current !== undefined){
+            peer.current.destroy()
+        }
         await dispatch(tabSlice.actions.set_tab('home'))
         await dispatch(roomsSlice.actions.remove_room({id: curRoom.id, user: user}))
         await dispatch(roomsSlice.actions.set_currentRoom(''))
-        await setTimeout(() => nav('../home'), 1000)
+        await nav('../home')
     }
 
     const handleUserOffStream = () => {
@@ -89,8 +90,6 @@ function Room({socket}){
     }
     , [currentDonate])
 
-   
-
     const getMessagesFromServer = async() => {
         try{
             const {data} = await axios.post(getMessagesRoute, {id: curRoom.id})
@@ -110,13 +109,11 @@ function Room({socket}){
         }
     }
 
-    const onCurrentRoomDestroy = () => {
-        dispatch(tabSlice.actions.set_tab('home'))    
-
-        dispatch(roomsSlice.actions.set_currentRoom(''))
-
-        setTimeout(() => nav('../home'), 1000)
-
+    const onCurrentRoomDestroy = async() => {
+        peer.current.destroy()
+        await dispatch(tabSlice.actions.set_tab('home'))    
+        await dispatch(roomsSlice.actions.set_currentRoom(''))
+        nav('../home')
     }
 
     const onUserSendDonate = async(data) => {
@@ -139,31 +136,23 @@ function Room({socket}){
         }
     }, [stream])
 
-    const onGetStreamfromRoomMaster = (data) => {
+    const onGetStreamfromRoomMaster = async(data) => {
         const {signalData, userId} = data;
         if(user.id === userId){
-            peer.current = new Peer()
-            peer.current.on('signal', signal => {
-                if(socket.current !== undefined){
-                    socket.current.emit('client-accept-stream', {id:curRoom.id, signalData: signal, userId: userId})
-                }
-            })
-            peer.current.signal(signalData)
-            peer.current.on('stream', stream => {
-                console.log('dây nè', stream)
-                if(stream !== null){
+            if(peer.current === undefined){
+                peer.current = new Peer({initiator:false, trickle: false})
+                peer.current.on('signal', (signal) => {
+                    if(socket.current !== undefined){
+                        socket.current.emit('client-accept-stream', {id:curRoom.id, signalData: signal, userId: userId})
+                    }
+                })
+                peer.current.on('stream', stream => {
                     setStream(stream)
                     video.current.srcObject = stream
-                    video.current.srcObject.getVideoTracks()[0].addEventListener('ended', handleUserOffStream)
-                    setIsOnline(true)
-                    setIsPause(false)
-                    setShowCam(true)
-                    if(timeLine.current !== undefined){
-                        timeLine.current.addEventListener('mouseover', handleChangeTimeStamp)
-                        timeLine.current.addEventListener('mouseout', handleRemoveTimerId)
-                    }
-                }
-            })
+                })
+                peer.current.signal(signalData)
+            }
+            setIsOnline(true)
         }
     }
 
@@ -178,10 +167,13 @@ function Room({socket}){
         const {userData} = data
         dispatch(roomsSlice.actions.ban_user({id: curRoom.id, userData: userData}))
         if(userData.id === user.id){
+            peer.current.destroy()
+            socket.current.emit('leave-room', {id: curRoom.id, user: user, isOut: false})
             await dispatch(tabSlice.actions.set_tab('home'))
             await dispatch(roomsSlice.actions.remove_roomSubscribedList(curRoom.id))
             await dispatch(roomsSlice.actions.set_currentRoom(''))
-            await setTimeout(() => nav('../home'), 1000)
+            await nav('../home')
+            
         }
     }
 
@@ -205,14 +197,20 @@ function Room({socket}){
         }
         getMessagesFromServer()
         return () => {
+            socket.current.emit('leave-room', {id: curRoom.id, user: user, isOut: false})
+            
             if(socket.current !== undefined){
-                socket.current.emit('leave-room', {id: curRoom.id, user: user, isOut: false})
+                
+                
                 socket.current.off('curent-room-destroy', onCurrentRoomDestroy)
                 socket.current.off('user-send-donate', onUserSendDonate)
                 socket.current.off('get-stream', onGetStreamfromRoomMaster)
                 socket.current.off('new-user-joined', onNewUserJoined)
                 socket.current.off('user-leaved-room', onUserLeaveRoom)
                 socket.current.off('user-banned', onUserBanned)
+            }
+            if(peer.current !== undefined){
+                peer.current.destroy()
             }
         }
     }

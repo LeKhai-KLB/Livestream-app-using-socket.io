@@ -107,7 +107,6 @@ function Login({socket, host}) {
     }
     catch(err){
       toast.dismiss(loadingId)
-      console.log('rrtrt')
       toast.error("Can't connect to server")
       btn.current.disabled = false
     }

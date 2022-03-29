@@ -24,7 +24,6 @@ function DonateBox({isAdmin, socket}){
     const tabsContainer = useRef()
     const indicatorBar = useRef()
     const donateButtonContainer = useRef()
-    console.log('donate')
 
     useEffect(() => {
         if(!isAdmin){
@@ -34,7 +33,6 @@ function DonateBox({isAdmin, socket}){
                     setButtonText("Not enough")
                 }
                 else{
-                    console.log(donateButtonContainer)
                     donateButtonContainer.current.classList.remove(styles.unActiveButton)
                     setButtonText("Donate now")
                 }
@@ -109,7 +107,6 @@ function DonateBox({isAdmin, socket}){
             await handleOnClickShowTabs()
         }
         catch(err){
-            console.log("Can't not send donate")
         }
         
     }

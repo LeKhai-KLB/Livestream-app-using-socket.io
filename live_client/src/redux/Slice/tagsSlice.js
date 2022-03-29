@@ -1,9 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
-import Tags_table from '../../data/Tags_table';
 
 export default createSlice({
     name: 'tags',
-    initialState: Tags_table,
+    initialState: [],
     reducers: {
         add_tags: (state, action) => {
             return action.payload.forEach(element => {
@@ -40,7 +39,7 @@ export default createSlice({
         },
         reset_tags: (state, action) => {
             if(action.payload === true){
-                return Tags_table;
+                return [];
             }
         }
     }

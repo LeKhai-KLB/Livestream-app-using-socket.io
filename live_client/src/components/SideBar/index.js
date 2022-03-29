@@ -26,8 +26,6 @@ function SideBar({socket}){
     const nav = useNavigate();
     const dispatch = useDispatch();
 
-    console.log('sidebar')
-
     const handleTabOnClickUserRoom = useCallback(async(value, id) => {
         if(value !== tabIndex){
             await dispatch(roomsSlice.actions.set_currentRoom(id))

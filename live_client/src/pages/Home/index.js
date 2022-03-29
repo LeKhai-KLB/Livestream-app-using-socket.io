@@ -55,20 +55,16 @@ function Home({socket}){
                 const {coins, ...userData} = user
                 const { data } = await axios.post(joinRoomRoute, {roomId: id, userId: user.id})
                 if(data.msg === "You are already in this room"){
-                    console.log("You are already in this room")
                     await dispatch(roomsSlice.actions.set_currentRoom(id))
                     setTimeout(() => handleNavigate(id)
                     , 2000)
                 }
                 else{
                     if(data.status === false){
-                        console.log(data.msg)
                         setShowLoad(false)
                         toast.error(data.msg)
                     }
                     else{
-                        
-                        console.log("ssuccess")
                         await dispatch(roomsSlice.actions.add_user_join_room({id: id, user: userData}))
                         await dispatch(roomsSlice.actions.add_roomSubscribedList({id: id, user: userData}))
                         await dispatch(roomsSlice.actions.set_currentRoom(id))
@@ -78,7 +74,6 @@ function Home({socket}){
                 }
             }
             else{
-                console.log("bang nhau")
                 await dispatch(roomsSlice.actions.set_currentRoom(id))
                 setTimeout(() => handleNavigate(id)
                 , 2000)
